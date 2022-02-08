@@ -40,10 +40,10 @@ services:
     ports:
       - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: '${ROOT_PASS}'
-      MYSQL_USER: '${USER}'
-      MYSQL_PASSWORD: '${PASS}'
-      MYSQL_DATABASE: '${DB}'
+      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASS}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASS}'
+      MYSQL_DATABASE: '${DB_NAME}'
       volumes:
       - ./apps/db:/var/lib/mysql
     networks:

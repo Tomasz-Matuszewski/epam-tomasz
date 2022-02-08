@@ -20,10 +20,10 @@ RUN wget -q "https://sourceforge.net/projects/testlink/files/TestLink%201.9/Test
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
 # Configure testlink
-RUN echo "DB_USER=${USER}" >> /var/www/html/testlink/config_db.inc.php && \
-    echo "DB_PASS=${PASS}" >> /var/www/html/testlink/config_db.inc.php && \  
-    echo "DB_HOST=${HOST}" >> /var/www/html/testlink/config_db.inc.php && \
-    echo "DB_NAME=${DB}" >> /var/www/html/testlink/config_db.inc.php
+RUN echo "DB_USER=${DB_USER}" >> /var/www/html/testlink/config_db.inc.php && \
+    echo "DB_PASS=${DB_PASS}" >> /var/www/html/testlink/config_db.inc.php && \  
+    echo "DB_HOST=${DB_HOST}" >> /var/www/html/testlink/config_db.inc.php && \
+    echo "DB_NAME=${DB_NAME}" >> /var/www/html/testlink/config_db.inc.php
 #Set permision upload & logs
 RUN chmod 777 -R /var/www/html/testlink/logs && \
     chmod 777 -R /var/www/html/testlink/upload_area
