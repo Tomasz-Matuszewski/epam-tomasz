@@ -19,11 +19,19 @@ RUN wget -q "https://sourceforge.net/projects/testlink/files/TestLink%201.9/Test
 # Configure php
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
-#Set permision 
-RUN chmod 777 -R /var/www/html/testlink && \
+# Configure testlink
+RUN echo "DB_USER=${USER}" >> /var/www/html/testlink/config_db.inc.php && \
+    echo "DB_PASS=${PASS}" >> /var/www/html/testlink/config_db.inc.php && \  
+    echo "DB_HOST=${HOST}" >> /var/www/html/testlink/config_db.inc.php && \
+    echo "DB_NAME=${DB}" >> /var/www/html/testlink/config_db.inc.php
+#Set permision upload & logs
+RUN chmod 777 -R /var/www/html/testlink/logs && \
+    chmod 777 -R /var/www/html/testlink/upload_area
 # Add user
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
+#Set permision 
+RUN chown -R www:www /var/www/html/testlink 
 # Change current user to www
 USER www
 # Expose port 9000 and start php-fpm server

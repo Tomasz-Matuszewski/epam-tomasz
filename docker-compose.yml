@@ -13,7 +13,7 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - /opt/apps/testlink:/var/www/html/testlink:rw
+      - ./apps/testlink:/var/www/html/testlink:rw
     networks:
       - testlink-network
   web:
@@ -25,13 +25,14 @@ services:
     ports:
       - 80:80
     volumes:
-      - /opt/apps/testlink:/var/www/html/testlink:rw
+      - ./apps/testlink:/var/www/html/testlink:rw
     networks:
       - testlink-network      
   db:
     image: mysql:5.7
     restart: unless-stopped
     container_name: db
+    command: --init-file ./apps/testlink/install/sql/mysql/testlink_create_tables.sql
     ports:
       - 3306:3306
     environment:
@@ -40,10 +41,9 @@ services:
       MYSQL_PASSWORD: '${PASS}'
       MYSQL_DATABASE: '${DB}'
       volumes:
-      - /opt/apps/db/mysql:/var/lib/mysql
+      - ./apps/db:/var/lib/mysql
     networks:
       - testlink-network
 networks:
   testlink-network:
     driver: bridge
-
