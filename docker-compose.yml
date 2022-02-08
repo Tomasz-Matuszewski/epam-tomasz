@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: backend:v1
+    container_name: backend
+    restart: unless-stopped
+    links:
+      - db
+    ports:
+      - 9000:9000
+    volumes:
+      - /opt/apps/testlink:/var/www/html/testlink:rw
+    networks:
+      - testlink-network
+  web:
+    image: nginx:latest
+    restart: unless-stopped
+    container_name: web
+    links:
+      - backend
+    ports:
+      - 80:80
+    volumes:
+      - /opt/apps/testlink:/var/www/html/testlink:rw
+    networks:
+      - testlink-network      
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    container_name: db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: '${ROOT_PASS}'
+      MYSQL_USER: '${USER}'
+      MYSQL_PASSWORD: '${PASS}'
+      MYSQL_DATABASE: '${DB}'
+      volumes:
+      - /opt/apps/db/mysql:/var/lib/mysql
+    networks:
+      - testlink-network
+networks:
+  testlink-network:
+    driver: bridge
+
