@@ -12,6 +12,10 @@ services:
       - db
     ports:
       - 9000:9000
+    environment:
+      TESTLINK_USERNAME: '${TESTLINK_USERNAME}'
+      TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
+      TESTLINK_EMAIL: '${TESTLINK_EMAIL}'
     volumes:
       - ./apps/testlink:/var/www/html/testlink:rw
     networks:
