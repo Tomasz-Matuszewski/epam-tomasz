@@ -36,8 +36,8 @@ services:
     ports:
       - 8086:80
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - .apps/nginx/log:/var/log/nginx/logs:rw
+      - ./site.conf:/etc/nginx/conf.d/site.conf
+      - .apps/nginx/log:/var/log/nginx:rw
       - testlink:/var/www/html/testlink:rw
     networks:
       - testlink-network      
