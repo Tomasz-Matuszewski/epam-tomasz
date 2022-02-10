@@ -40,7 +40,6 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     container_name: db
-#    command: --init-file /tmp/init.sql
     ports:
       - 3306:3306
     environment:
@@ -50,7 +49,7 @@ services:
       MYSQL_DATABASE: '${DB_NAME}'
     volumes:
       - ./apps/db:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - testlink:/docker-entrypoint-initdb.d/var/www/html/testlink/install/sql/mysql/testlink_create_tables.sql
     networks:
       - testlink-network
 networks:
