@@ -40,11 +40,11 @@
 #
 # ---------------------------------------------------------------------------------------
 
-CREATE DATABASE IF NOT EXISTS testlink_db;
-GRANT ALL PRIVILEGES ON testlink_db . * TO 'testlink'@'%';
+#CREATE DATABASE IF NOT EXISTS testlink_db;
+#GRANT ALL PRIVILEGES ON testlink_db . * TO 'testlink'@'%';
 #ALTER USER 'testlink'@'%' IDENTIFIED WITH mysql_native_password BY 'testlink';
-FLUSH PRIVILEGES;
-USE testlink_db;
+#FLUSH PRIVILEGES;
+#USE testlink_db;
 
 CREATE TABLE /*prefix*/assignment_types (
   `id` int(10) unsigned NOT NULL auto_increment,

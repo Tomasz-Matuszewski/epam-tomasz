@@ -50,7 +50,7 @@ services:
       MYSQL_DATABASE: '${DB_NAME}'
     volumes:
       - ./apps/db:/var/lib/mysql
-      - ./init.sql:/tmp/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - testlink-network
 networks:
