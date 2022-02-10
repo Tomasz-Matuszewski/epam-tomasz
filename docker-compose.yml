@@ -40,7 +40,6 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     container_name: db
-    command: --init-file /tmp/init.sql
     ports:
       - 3306:3306
     environment:
@@ -51,6 +50,7 @@ services:
     volumes:
       - ./apps/db:/var/lib/mysql
       - ./init.sql:/tmp/init.sql
+    command: --init-file /tmp/init.sql
     networks:
       - testlink-network
 networks:
