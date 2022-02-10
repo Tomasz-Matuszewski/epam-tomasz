@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y \
 # Get Testlink
 RUN wget -q "https://sourceforge.net/projects/testlink/files/TestLink%201.9/TestLink%201.9.20/testlink-1.9.20.tar.gz/download" -O testlink-1.9.20.tar.gz && \
     tar zxvf testlink-1.9.20.tar.gz && \
-    mv -fT testlink-1.9.20 /var/www/html/testlink && \
-    rm testlink-1.9.20.tar.gz
+    mv -f ./testlink-1.9.20/* /var/www/html/testlink/ && \
+    rm -fr testlink-1.9.20.tar.gz
 # Configure php
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
