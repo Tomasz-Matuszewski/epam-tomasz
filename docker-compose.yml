@@ -18,7 +18,6 @@ services:
       DATABASE_PASS: '${DB_PASS}'
       DATABASE_HOST: '${DB_HOST}'
       DATABASE_NAME: '${DB_NAME}'
-
     volumes:
       - testlink:/var/www/html/testlink:rw
     networks:
