@@ -15,7 +15,13 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     tar \
-    wget
+    wget \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
 # Get Testlink
 RUN wget -q "https://sourceforge.net/projects/testlink/files/TestLink%201.9/TestLink%201.9.20/testlink-1.9.20.tar.gz/download" -O testlink-1.9.20.tar.gz && \
     tar zxvf testlink-1.9.20.tar.gz && \
@@ -26,10 +32,7 @@ RUN wget -q "https://sourceforge.net/projects/testlink/files/TestLink%201.9/Test
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
 # Configure testlink
-#RUN echo "DB_USER=${DB_USER}" >> /var/www/html/testlink/config_db.inc.php && \
-#    echo "DB_PASS=${DB_PASS}" >> /var/www/html/testlink/config_db.inc.php && \  
-#    echo "DB_HOST=${DB_HOST}" >> /var/www/html/testlink/config_db.inc.php && \
-#    echo "DB_NAME=${DB_NAME}" >> /var/www/html/testlink/config_db.inc.php
+ADD ./config_db.inc.php /var/www/html/testlink
 #Set permision upload & logs
 RUN chmod 777 -R /var/www/html/testlink/logs && \
     chmod 777 -R /var/www/html/testlink/upload_area
