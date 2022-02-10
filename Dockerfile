@@ -29,8 +29,8 @@ ADD ./config_db.inc.php /var/www/html/testlink
 #Create dirs and set permision
 RUN mkdir -p /var/testlink /var/testlink/logs /var/testlink/upload_area
 RUN chmod 777 -R /var/www/html/testlink && \
-    chmod 777 -R /var/www/html/testlink/logs && \
-    chmod 777 -R /var/www/html/testlink/upload_area
+    chmod 777 -R /var/testlink/logs && \
+    chmod 777 -R /var/testlink/upload_area
 # Add user
 #RUN groupadd -g 1000 www
 #RUN useradd -u 1000 -ms /bin/bash -g www www
