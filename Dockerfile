@@ -2,10 +2,10 @@ FROM php:7.4-fpm
 # Set working directory
 #WORKDIR /var/www/html/testlink
 #Import vars
-ARG DB_USER=$DB_USER
-ARG DB_PASS=$DB_PASS
-ARG DB_HOST=$DB_HOST
-ARG DB_NAME=$DB_NAME
+#ARG DB_USER=$DB_USER
+#ARG DB_PASS=$DB_PASS
+#ARG DB_HOST=$DB_HOST
+#ARG DB_NAME=$DB_NAME
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     locales \
