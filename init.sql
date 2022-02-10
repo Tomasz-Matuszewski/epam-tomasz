@@ -40,7 +40,7 @@
 #
 # ---------------------------------------------------------------------------------------
 
-#CREATE DATABASE IF NOT EXISTS testlink_db;
+CREATE DATABASE IF NOT EXISTS testlink_db;
 USE testlink_db;
 CREATE TABLE /*prefix*/assignment_types (
   `id` int(10) unsigned NOT NULL auto_increment,
