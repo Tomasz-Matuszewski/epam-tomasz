@@ -15,8 +15,6 @@ services:
     restart: unless-stopped
     links:
       - db
-    ports:
-      - 9000:9000
     environment:
       TESTLINK_USERNAME: '${TESTLINK_USERNAME}'
       TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
