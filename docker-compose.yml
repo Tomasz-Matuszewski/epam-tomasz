@@ -49,6 +49,7 @@ services:
       MYSQL_USER: '${DB_USER}'
       MYSQL_PASSWORD: '${DB_PASS}'
       MYSQL_DATABASE: '${DB_NAME}'
+      MYSQL_ROOT_HOST: '%'
     volumes:
       - ./apps/db:/var/lib/mysql
       - ./init.sql:/tmp/init.sql
