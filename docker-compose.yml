@@ -17,7 +17,7 @@ services:
       TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
       TESTLINK_EMAIL: '${TESTLINK_EMAIL}'
     volumes:
-      - apps:/var/www/html/testlink:rw
+      - testlink:/var/www/html/testlink:rw
     networks:
       - testlink-network
   web:
@@ -31,14 +31,14 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - .apps/nginx/log:/var/log/nginx/logs:rw
-      - apps:/var/www/html/testlink:rw
+      - testlink:/var/www/html/testlink:rw
     networks:
       - testlink-network      
   db:
     image: mysql:5.7
     restart: unless-stopped
     container_name: db
-    command: --init-file ./apps/testlink/install/sql/mysql/testlink_create_tables.sql
+    command: --init-file testlink/install/sql/mysql/testlink_create_tables.sql
     ports:
       - 3306:3306
     environment:
@@ -54,4 +54,4 @@ networks:
   testlink-network:
     driver: bridge
 volumes:
-  apps: {}
+  testlink: {}
