@@ -16,11 +16,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 # Get Testlink
-RUN wget -q "https://sourceforge.net/projects/testlink/files/TestLink%201.9/TestLink%201.9.20/testlink-1.9.20.tar.gz/download" -O testlink-1.9.20.tar.gz && \
-    tar zxvf testlink-1.9.20.tar.gz && \
+RUN wget -q "https://sourceforge.net/projects/testlink/files/TestLink%201.9/TestLink%201.9.19/testlink-1.9.19.tar.gz/download" -O testlink-1.9.19.tar.gz && \
+    tar zxvf testlink-1.9.19.tar.gz && \
     mkdir -p /var/www/html/testlink && \
-    mv -f ./testlink-1.9.20/* /var/www/html/testlink && \
-    rm -fr testlink-1.9.20.tar.gz testlink-1.9.20
+    mv -f ./testlink-1.9.19/* /var/www/html/testlink && \
+    rm -fr testlink-1.9.19.tar.gz testlink-1.9.19
 # Configure php
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
