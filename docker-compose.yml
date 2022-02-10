@@ -2,12 +2,17 @@ version: '3.3'
 
 services:
   backend:
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_HOST: ${DB_HOST}
+        DB_NAME: ${DB_NAME}
     image: backend:v1
-    env_file:
-      - .env
     container_name: backend
     restart: unless-stopped
     links:
