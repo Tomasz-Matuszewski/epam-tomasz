@@ -42,7 +42,7 @@
 
 CREATE DATABASE IF NOT EXISTS testlink_db;
 GRANT ALL PRIVILEGES ON testlink_db . * TO 'testlink'@'%';
-ALTER USER 'testlink'@'%' IDENTIFIED WITH mysql_native_password BY 'testlink';
+#ALTER USER 'testlink'@'%' IDENTIFIED WITH mysql_native_password BY 'testlink';
 FLUSH PRIVILEGES;
 USE testlink_db;
 
