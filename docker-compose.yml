@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
   backend:
@@ -45,7 +45,7 @@ services:
       MYSQL_USER: '${DB_USER}'
       MYSQL_PASSWORD: '${DB_PASS}'
       MYSQL_DATABASE: '${DB_NAME}'
-      volumes:
+    volumes:
       - ./apps/db:/var/lib/mysql
     networks:
       - testlink-network
