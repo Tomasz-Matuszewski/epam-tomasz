@@ -40,8 +40,8 @@
 #
 # ---------------------------------------------------------------------------------------
 
-CREATE DATABASE IF NOT EXISTS testlink_db;
-GRANT ALL PRIVILEGES ON testlink_db . * TO 'testlink'@'%';
+#CREATE DATABASE IF NOT EXISTS testlink_db;
+#GRANT ALL PRIVILEGES ON testlink_db . * TO 'testlink'@'%';
 USE testlink_db;
 
 CREATE TABLE /*prefix*/assignment_types (

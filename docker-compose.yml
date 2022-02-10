@@ -36,7 +36,7 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     container_name: db
-#    command: --init-file /tmp/init.sql
+    command: --init-file /tmp/init.sql
     ports:
       - 3306:3306
     environment:
