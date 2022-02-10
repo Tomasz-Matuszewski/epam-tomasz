@@ -834,3 +834,7 @@ AS SELECT
 FROM /*prefix*/nodes_hierarchy NHTCV 
 WHERE NHTCV.node_type_id = 4 and 
 not(exists(select 1 from /*prefix*/testcase_keywords TCK where `TCK`.`tcversion_id` = `NHTCV`.`id`));
+
+#
+# Database version
+INSERT INTO /*prefix*/db_version (version,notes,upgrade_ts) VALUES('DB 1.9.19', 'TestLink 1.9.19 Metonic cycle',CURRENT_TIMESTAMP());
