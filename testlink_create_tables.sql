@@ -85,6 +85,10 @@ CREATE TABLE /*prefix*/builds (
   `creation_ts` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `release_date` date NULL,
   `closed_on_date` date NULL,
+  `commit_id` varchar(64) NULL,
+  `tag` varchar(64) NULL,
+  `branch` varchar(64) NULL,
+  `release_candidate` varchar(100),
   PRIMARY KEY  (`id`),
   UNIQUE KEY /*prefix*/name (`testplan_id`,`name`),
   KEY /*prefix*/testplan_id (`testplan_id`)
@@ -247,6 +251,21 @@ CREATE TABLE /*prefix*/execution_tcsteps (
 ) DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE /*prefix*/execution_tcsteps_wip (
+   id int(10) unsigned NOT NULL auto_increment,
+   tcstep_id int(10) unsigned NOT NULL default '0',
+   testplan_id int(10) unsigned NOT NULL default '0',
+   platform_id int(10) unsigned NOT NULL default '0',
+   build_id int(10) unsigned NOT NULL default '0',
+   tester_id int(10) unsigned default NULL,
+   creation_ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   notes text,
+   status char(1) default NULL,
+  PRIMARY KEY  (id),
+  UNIQUE KEY /*prefix*/execution_tcsteps_wip_idx1(`tcstep_id`,`testplan_id`,`platform_id`,`build_id`)
+) DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE /*prefix*/inventory (
   id int(10) unsigned NOT NULL auto_increment,
 	`testproject_id` INT( 10 ) UNSIGNED NOT NULL ,
@@ -276,8 +295,8 @@ CREATE TABLE /*prefix*/keywords (
 CREATE TABLE /*prefix*/milestones (
   id int(10) unsigned NOT NULL auto_increment,
   testplan_id int(10) unsigned NOT NULL default '0',
-  target_date date NULL,
-  start_date date NOT NULL,
+  target_date date NOT NULL,
+  start_date date NULL,
   a tinyint(3) unsigned NOT NULL default '0',
   b tinyint(3) unsigned NOT NULL default '0',
   c tinyint(3) unsigned NOT NULL default '0',
@@ -302,7 +321,8 @@ CREATE TABLE /*prefix*/nodes_hierarchy (
   `node_type_id` int(10) unsigned NOT NULL default '1',
   `node_order` int(10) unsigned default NULL,
   PRIMARY KEY  (`id`),
-  KEY /*prefix*/pid_m_nodeorder (`parent_id`,`node_order`)
+  KEY /*prefix*/pid_m_nodeorder (`parent_id`,`node_order`),
+  KEY /*prefix*/nodes_hierarchy_node_type_id (`node_type_id`)
 ) DEFAULT CHARSET=utf8;
 
 
@@ -311,6 +331,8 @@ CREATE TABLE /*prefix*/platforms (
   name varchar(100) NOT NULL,
   testproject_id int(10) UNSIGNED NOT NULL,
   notes text NOT NULL,
+  enable_on_design tinyint(1) unsigned NOT NULL default '0',
+  enable_on_execution tinyint(1) unsigned NOT NULL default '1',
   PRIMARY KEY (id),
   UNIQUE KEY /*prefix*/idx_platforms (testproject_id,name)
 ) DEFAULT CHARSET=utf8;
@@ -420,8 +442,10 @@ CREATE TABLE /*prefix*/testcase_keywords (
   `tcversion_id` int(10) unsigned NOT NULL default '0', 
   `keyword_id` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
-  UNIQUE KEY /*prefix*/idx01_testcase_keywords (`testcase_id`,`tcversion_id`,`keyword_id`)
+  UNIQUE KEY /*prefix*/idx01_testcase_keywords (`testcase_id`,`tcversion_id`,`keyword_id`),
+  KEY /*prefix*/idx02_testcase_keywords (`tcversion_id`)
 ) DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE /*prefix*/tcversions (
   `id` int(10) unsigned NOT NULL,
@@ -487,6 +511,7 @@ CREATE TABLE /*prefix*/testplan_platforms (
   id int(10) unsigned NOT NULL auto_increment,
   testplan_id int(10) unsigned NOT NULL,
   platform_id int(10) unsigned NOT NULL,
+  active tinyint(1) NOT NULL default '1',
   PRIMARY KEY (id),
   UNIQUE KEY /*prefix*/idx_testplan_platforms(testplan_id,platform_id)
 ) DEFAULT CHARSET=utf8 COMMENT='Connects a testplan with platforms';
@@ -551,7 +576,7 @@ CREATE TABLE /*prefix*/user_assignments (
 CREATE TABLE /*prefix*/users (
   `id` int(10) unsigned NOT NULL auto_increment,
   `login` varchar(100) NOT NULL default '',
-  `password` varchar(32) NOT NULL default '',
+  `password` varchar(255) NOT NULL default '',
   `role_id` int(10) unsigned NOT NULL default '0',
   `email` varchar(100) NOT NULL default '',
   `first` varchar(50) NOT NULL default '',
@@ -762,6 +787,43 @@ CREATE TABLE /*prefix*/plugins_configuration (
 ) DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE /*prefix*/testcase_platforms (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  testcase_id int(10) unsigned NOT NULL DEFAULT '0',
+  tcversion_id int(10) unsigned NOT NULL DEFAULT '0',
+  platform_id int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (id),
+  UNIQUE KEY idx01_testcase_platform (testcase_id,tcversion_id,platform_id),
+  KEY idx02_testcase_platform (tcversion_id)
+) DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE /*prefix*/baseline_l1l2_context (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  testplan_id int(10) unsigned NOT NULL DEFAULT '0',
+  platform_id int(10) unsigned NOT NULL DEFAULT '0',
+  begin_exec_ts timestamp NOT NULL,
+  end_exec_ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  creation_ts timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  UNIQUE KEY udx1_context (testplan_id,platform_id,creation_ts)
+) DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE /*prefix*/baseline_l1l2_details (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  context_id int(10) unsigned NOT NULL,
+  top_tsuite_id int(10) unsigned NOT NULL DEFAULT '0',
+  child_tsuite_id int(10) unsigned NOT NULL DEFAULT '0',
+  status char(1) DEFAULT NULL,
+  qty int(10) unsigned NOT NULL DEFAULT '0',
+  total_tc int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY udx1_details (context_id,top_tsuite_id,child_tsuite_id,status)
+) DEFAULT CHARSET=utf8;
+
+
+
 # VIEWS
 #
 # @used_by latest_tcase_version_id
@@ -811,7 +873,7 @@ AS SELECT
    LRQVN.req_id AS req_id,
    LRQVN.version AS version,
    REQV.id AS req_version_id
-FROM latest_req_version LRQVN 
+FROM /*prefix*/latest_req_version LRQVN 
 JOIN /*prefix*/nodes_hierarchy NHRQV
 ON NHRQV.parent_id = LRQVN.req_id 
 JOIN /*prefix*/req_versions REQV 
@@ -830,14 +892,83 @@ GROUP BY RSR.parent_id,RS.testproject_id;
 CREATE OR REPLACE VIEW /*prefix*/tcversions_without_keywords
 AS SELECT
    NHTCV.parent_id AS testcase_id,
-   NHTCV.id AS `id`
+   NHTCV.id AS id
 FROM /*prefix*/nodes_hierarchy NHTCV 
-WHERE NHTCV.node_type_id = 4 and 
-not(exists(select 1 from /*prefix*/testcase_keywords TCK where `TCK`.`tcversion_id` = `NHTCV`.`id`));
+WHERE NHTCV.node_type_id = 4 AND
+NOT(EXISTS(SELECT 1 FROM /*prefix*/testcase_keywords TCK 
+           WHERE TCK.tcversion_id = NHTCV.id));
+
+
+# 
+CREATE OR REPLACE VIEW /*prefix*/latest_exec_by_testplan 
+AS SELECT tcversion_id, testplan_id, MAX(id) AS id 
+FROM /*prefix*/executions 
+GROUP BY tcversion_id,testplan_id;
 
 #
+CREATE OR REPLACE VIEW /*prefix*/latest_exec_by_context
+AS SELECT tcversion_id, testplan_id,build_id,platform_id,max(id) AS id
+FROM /*prefix*/executions 
+GROUP BY tcversion_id,testplan_id,build_id,platform_id;
+
+#
+CREATE OR REPLACE VIEW /*prefix*/tcversions_without_platforms
+AS SELECT
+   NHTCV.parent_id AS testcase_id,
+   NHTCV.id AS id
+FROM /*prefix*/nodes_hierarchy NHTCV 
+WHERE NHTCV.node_type_id = 4 AND
+NOT(EXISTS(SELECT 1 FROM /*prefix*/testcase_platforms TCPL
+           WHERE TCPL.tcversion_id = NHTCV.id));
+
+
+#
+CREATE OR REPLACE VIEW /*prefix*/latest_exec_by_testplan_plat
+AS SELECT tcversion_id, testplan_id,platform_id,max(id) AS id
+FROM /*prefix*/executions 
+GROUP BY tcversion_id,testplan_id,platform_id;
+
+#
+CREATE OR REPLACE VIEW /*prefix*/tsuites_tree_depth_2
+AS SELECT TPRJ.prefix,
+NHTPRJ.name AS testproject_name,    
+NHTS_L1.name AS level1_name,
+NHTS_L2.name AS level2_name,
+NHTPRJ.id AS testproject_id, 
+NHTS_L1.id AS level1_id, 
+NHTS_L2.id AS level2_id 
+FROM /*prefix*/testprojects TPRJ 
+JOIN /*prefix*/nodes_hierarchy NHTPRJ 
+ON TPRJ.id = NHTPRJ.id
+LEFT OUTER JOIN /*prefix*/nodes_hierarchy NHTS_L1 
+ON NHTS_L1.parent_id = NHTPRJ.id
+LEFT OUTER JOIN /*prefix*/nodes_hierarchy NHTS_L2
+ON NHTS_L2.parent_id = NHTS_L1.id 
+WHERE NHTPRJ.node_type_id = 1 
+AND NHTS_L1.node_type_id = 2
+AND NHTS_L2.node_type_id = 2;
+
+#
+CREATE OR REPLACE VIEW /*prefix*/exec_by_date_time 
+AS (
+SELECT NHTPL.name AS testplan_name, 
+DATE_FORMAT(E.execution_ts, '%Y-%m-%d') AS yyyy_mm_dd,
+DATE_FORMAT(E.execution_ts, '%Y-%m') AS yyyy_mm,
+DATE_FORMAT(E.execution_ts, '%H') AS hh,
+DATE_FORMAT(E.execution_ts, '%k') AS hour,
+E.* FROM /*prefix*/executions E
+JOIN /*prefix*/testplans TPL on TPL.id=E.testplan_id
+JOIN /*prefix*/nodes_hierarchy NHTPL on NHTPL.id = TPL.id);
+
+# TestLink Open Source Project - http://testlink.sourceforge.net/
+# testlink_create_default_data.sql
+# SQL script - create default data (rights & admin account)
+#
+# Database Type: MySQL
+# ---------------------------------------------------------------------------------
+
 # Database version
-INSERT INTO /*prefix*/db_version (version,notes,upgrade_ts) VALUES('DB 1.9.19', 'TestLink 1.9.19 Metonic cycle',CURRENT_TIMESTAMP());
+INSERT INTO /*prefix*/db_version (version,notes,upgrade_ts) VALUES('DB 1.9.20', 'TestLink 1.9.20 Raijin',CURRENT_TIMESTAMP());
 
 # Node types -
 INSERT INTO /*prefix*/node_types  (id,description) VALUES (1,'testproject');
@@ -928,6 +1059,10 @@ INSERT INTO /*prefix*/rights (id,description) VALUES (51,'codetracker_management
 INSERT INTO /*prefix*/rights (id,description) VALUES (52,'codetracker_view');
 INSERT INTO /*prefix*/rights (id,description) VALUES (53,'cfield_assignment');
 INSERT INTO /*prefix*/rights (id,description) VALUES (54,'exec_assign_testcases');
+
+-- since 1.9.20
+INSERT INTO /*prefix*/rights (id,description) VALUES (55,'testproject_add_remove_keywords_executed_tcversions');
+INSERT INTO /*prefix*/rights (id,description) VALUES (56,'delete_frozen_tcversion');
 
 # Rights for Administrator role
 INSERT INTO /*prefix*/role_rights (role_id,right_id) VALUES (8,1 );
@@ -1066,3 +1201,33 @@ INSERT INTO /*prefix*/assignment_status (id,description) VALUES(2,'closed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(3,'completed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(4,'todo_urgent');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(5,'todo');
+
+# TestLink Open Source Project - http://testlink.sourceforge.net/
+# This script is distributed under the GNU General Public License 2 or later.
+# ---------------------------------------------------------------------------------------
+# @filesource testlink_create_udf0.sql
+#
+#
+USE `YOUR_TL_DBNAME`; /* Replace before run */
+DROP function IF EXISTS `UDFStripHTMLTags`;
+
+DELIMITER $$
+USE `YOUR_TL_DBNAME`$$ /* Replace before run */
+CREATE FUNCTION `UDFStripHTMLTags`(Dirty TEXT) RETURNS TEXT CHARSET utf8
+BEGIN
+DECLARE iStart, iEnd, iLength int;
+   WHILE Locate( '<', Dirty ) > 0 And Locate( '>', Dirty, Locate( '<', Dirty )) > 0 DO
+      BEGIN
+        SET iStart = Locate( '<', Dirty ), iEnd = Locate( '>', Dirty, Locate('<', Dirty ));
+        SET iLength = ( iEnd - iStart) + 1;
+        IF iLength > 0 THEN
+          BEGIN
+            SET Dirty = Insert( Dirty, iStart, iLength, '');
+          END;
+        END IF;
+      END;
+    END WHILE;
+RETURN Dirty;
+END$$
+
+DELIMITER ;

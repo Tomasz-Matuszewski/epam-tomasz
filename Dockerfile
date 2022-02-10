@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y \
 #    mkdir -p /var/www/html/testlink && \
 #    mv -f ./testlink-1.9.19/* /var/www/html/testlink && \
 #    rm -fr testlink-1.9.19.tar.gz testlink-1.9.19
-RUN git clone https://github.com/TestLinkOpenSourceTRMS/testlink-code.git /var/www/html/testlink
+RUN git clone https://github.com/TestLinkOpenSourceTRMS/testlink-code.git /var/www/html/testlink && \
+    rm -fr /var/www/html/testlink/install
 # Configure php
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
