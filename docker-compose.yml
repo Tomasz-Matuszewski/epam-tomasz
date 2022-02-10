@@ -2,8 +2,6 @@ version: '3.3'
 
 services:
   backend:
-    env_file:
-      - .env
     build:
       context: .
       dockerfile: Dockerfile
@@ -43,8 +41,6 @@ services:
       - testlink-network      
   db:
     image: mysql:5.7
-    env_file:
-      - .env
     restart: unless-stopped
     container_name: db
     command: --init-file /var/www/html/testlink/install/sql/mysql/testlink_create_tables.sql
