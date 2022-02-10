@@ -20,7 +20,7 @@ services:
       TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
       TESTLINK_EMAIL: '${TESTLINK_EMAIL}'
     volumes:
-      - ./apps/testlink:/var/www/html/testlink:rw
+      - testlink:/var/www/html/testlink:rw
       - ./config_db.inc.php /var/www/html/testlink/config_db.inc.php
     networks:
       - testlink-network
@@ -36,7 +36,7 @@ services:
       - ./site.conf:/etc/nginx/conf.d/default.conf
       - ./config_db.inc.php /var/www/html/testlink/config_db.inc.php
       - ./apps/nginx/log:/var/log/nginx:rw
-      - ./apps/testlink:/var/www/html/testlink:rw
+      - testlink:/var/www/html/testlink:rw
     networks:
       - testlink-network      
   db:
