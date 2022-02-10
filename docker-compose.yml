@@ -10,14 +10,6 @@ services:
     restart: unless-stopped
     links:
       - db
-    environment:
-      TESTLINK_USERNAME: '${TESTLINK_USERNAME}'
-      TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
-      TESTLINK_EMAIL: '${TESTLINK_EMAIL}'
-      DATABASE_USER: '${DB_USER}'
-      DATABASE_PASS: '${DB_PASS}'
-      DATABASE_HOST: '${DB_HOST}'
-      DATABASE_NAME: '${DB_NAME}'
     volumes:
       - testlink:/var/www/html/testlink:rw
     networks:
@@ -47,6 +39,8 @@ services:
       MYSQL_USER: '${DB_USER}'
       MYSQL_PASSWORD: '${DB_PASS}'
       MYSQL_DATABASE: '${DB_NAME}'
+      TESTLINK_USERNAME: '${TESTLINK_USERNAME}'
+      TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
     volumes:
       - ./apps/db:/var/lib/mysql
       - ./testlink_create_tables.sql:/docker-entrypoint-initdb.d/init.sql
