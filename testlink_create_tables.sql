@@ -1188,7 +1188,7 @@ INSERT INTO /*prefix*/role_rights (role_id,right_id) VALUES (9,50);
 #
 # TICKET 4342: Security problem with multiple Testlink installations on the same server 
 INSERT INTO /*prefix*/users (login,password,role_id,email,first,last,locale,active,cookie_string)
-			VALUES ('admin',MD5('admin'), 8,'', 'Testlink','Administrator', 'en_GB',1,CONCAT(MD5(RAND()),MD5('admin')));
+			VALUES ('admin',MD5('${TESTLINK_PASSWORD}'), 8,'', 'Testlink','Administrator', 'en_GB',1,CONCAT(MD5(RAND()),MD5('${TESTLINK_PASSWORD}')));
 
 
 # Assignment types
@@ -1201,33 +1201,3 @@ INSERT INTO /*prefix*/assignment_status (id,description) VALUES(2,'closed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(3,'completed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(4,'todo_urgent');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(5,'todo');
-
-# TestLink Open Source Project - http://testlink.sourceforge.net/
-# This script is distributed under the GNU General Public License 2 or later.
-# ---------------------------------------------------------------------------------------
-# @filesource testlink_create_udf0.sql
-#
-#
-USE `YOUR_TL_DBNAME`; /* Replace before run */
-DROP function IF EXISTS `UDFStripHTMLTags`;
-
-DELIMITER $$
-USE `YOUR_TL_DBNAME`$$ /* Replace before run */
-CREATE FUNCTION `UDFStripHTMLTags`(Dirty TEXT) RETURNS TEXT CHARSET utf8
-BEGIN
-DECLARE iStart, iEnd, iLength int;
-   WHILE Locate( '<', Dirty ) > 0 And Locate( '>', Dirty, Locate( '<', Dirty )) > 0 DO
-      BEGIN
-        SET iStart = Locate( '<', Dirty ), iEnd = Locate( '>', Dirty, Locate('<', Dirty ));
-        SET iLength = ( iEnd - iStart) + 1;
-        IF iLength > 0 THEN
-          BEGIN
-            SET Dirty = Insert( Dirty, iStart, iLength, '');
-          END;
-        END IF;
-      END;
-    END WHILE;
-RETURN Dirty;
-END$$
-
-DELIMITER ;
