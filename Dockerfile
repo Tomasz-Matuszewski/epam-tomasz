@@ -26,8 +26,10 @@ RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
 # Configure testlink
 ADD ./config_db.inc.php /var/www/html/testlink
-#Set permision upload & logs
-RUN chmod 777 -R /var/www/html/testlink/logs && \
+#Create dirs and set permision
+RUN mkdir -p /var/testlink /var/testlink/logs /var/testlink/upload_area
+RUN chmod 777 -R /var/www/html/testlink && \
+    chmod 777 -R /var/www/html/testlink/logs && \
     chmod 777 -R /var/www/html/testlink/upload_area
 # Add user
 #RUN groupadd -g 1000 www
