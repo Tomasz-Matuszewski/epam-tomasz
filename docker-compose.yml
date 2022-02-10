@@ -21,6 +21,7 @@ services:
       TESTLINK_EMAIL: '${TESTLINK_EMAIL}'
     volumes:
       - testlink:/var/www/html/testlink:rw
+      - ./config_db.inc.php /var/www/html/testlink/config_db.inc.php
     networks:
       - testlink-network
   web:
