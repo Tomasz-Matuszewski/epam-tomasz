@@ -1,4 +1,11 @@
 FROM php:7.4-fpm
+#vars
+ARG TESTLINK_DB_USER
+ARG TESTLINK_DB_PASSWORD
+ARG TESTLINK_DB_DATABASE
+ARG TESTLINK_DB_HOST
+ARG TESTLINK_USERNAME
+ARG TESTLINK_PASSWORD
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     locales \
