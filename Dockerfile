@@ -18,8 +18,6 @@ RUN apt-get update && apt-get install -y \
 #Get testlink 
 RUN git clone https://github.com/TestLinkOpenSourceTRMS/testlink-code.git /var/www/html/testlink && \
     rm -fr /var/www/html/testlink/install
-COPY ./conf/testlink/* /opt/scripts/
-RUN chmod 777 -R /opt/scripts
 # Configure php
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
@@ -35,4 +33,4 @@ RUN chown -R www-data:www-data /var/www/html/testlink
 USER www-data
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
-CMD ["sh","-c","/opt/scripts/run.sh && php-fpm"]
+CMD ["php-fpm"]
