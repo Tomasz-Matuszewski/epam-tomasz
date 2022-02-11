@@ -17,6 +17,11 @@ services:
     restart: unless-stopped
     links:
       - db
+    environment:
+      TESTLINK_DB_USER: '${DB_USER}'
+      TESTLINK_DB_PASSWORD: '${DB_PASS}'
+      TESTLINK_DB_DATABASE: '${DB_NAME}'
+      TESTLINK_DB_HOST: '${DB_HOST}'
     volumes:
       - testlink:/var/www/html/testlink:rw
     networks:
@@ -29,11 +34,6 @@ services:
       - backend
     ports:
       - 8086:80
-    environment:
-      TESTLINK_DB_USER: '${DB_USER}'
-      TESTLINK_DB_PASSWORD: '${DB_PASS}'
-      TESTLINK_DB_DATABASE: '${DB_NAME}'
-      TESTLINK_DB_HOST: '${DB_HOST}'
     volumes:
       - ./conf/site.conf:/etc/nginx/conf.d/default.conf
       - ./apps/nginx:/var/log/nginx:rw
