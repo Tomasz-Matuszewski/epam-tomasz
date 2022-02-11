@@ -35,5 +35,4 @@ RUN chown -R www-data:www-data /var/www/html/testlink
 USER www-data
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
-ENTRYPOINT [ "/opt/scripts/run.sh" ]
-CMD ["php-fpm"]
+CMD ["sh","-c","/opt/scripts/run.sh && php-fpm"]
