@@ -22,7 +22,7 @@ RUN git clone https://github.com/TestLinkOpenSourceTRMS/testlink-code.git /var/w
 RUN echo "max_execution_time=3000" >> /etc/php.ini && \
     echo "session.gc_maxlifetime=60000" >> /etc/php.ini
 # Configure testlink
-ADD ./config_db.inc.php /var/www/html/testlink
+ADD ./conf/config_db.inc.php /var/www/html/testlink
 #Create dirs and set permision
 RUN mkdir -p /var/testlink /var/testlink/logs /var/testlink/upload_area
 RUN chmod 777 -R /var/www/html/testlink && \

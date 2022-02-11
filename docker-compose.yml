@@ -23,7 +23,7 @@ services:
     ports:
       - 8086:80
     volumes:
-      - ./site.conf:/etc/nginx/conf.d/default.conf
+      - ./conf/site.conf:/etc/nginx/conf.d/default.conf
       - ./apps/nginx/log:/var/log/nginx:rw
       - testlink:/var/www/html/testlink:rw
     networks:
@@ -43,7 +43,7 @@ services:
       TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
     volumes:
       - ./apps/db:/var/lib/mysql
-      - ./testlink_create_tables.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./conf/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - testlink-network
 networks:
