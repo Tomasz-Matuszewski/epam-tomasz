@@ -37,6 +37,11 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     container_name: db
+    command:
+      - /bin/bash
+      - -c
+      - |
+          mysql -u ${MYSQL_USER} -p ${MYSQL_PASSWORD} -h ${MYSQL_ROOT_HOST} ${MYSQL_DATABASE} < ./conf/creds.sql
     ports:
       - 3306:3306
     environment:
