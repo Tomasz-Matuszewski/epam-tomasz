@@ -41,7 +41,7 @@ services:
       - /bin/bash
       - -c
       - |
-          mysql -u${DB_USER} -p${DB_PASS}  ${DB_NAME} < ./tmp/creds.sql
+          mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} ${DB_NAME} < ./tmp/creds.sql
     ports:
       - 3306:3306
     environment:
