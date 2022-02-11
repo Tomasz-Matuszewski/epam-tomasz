@@ -41,7 +41,7 @@ services:
       - /bin/bash
       - -c
       - |
-          mysql -u ${DB_USER} -p ${DB_PASS}  ${DB_NAME} < ./conf/creds.sql
+          mysql -u ${DB_USER} -p ${DB_PASS}  ${DB_NAME} < ./tmp/creds.sql
     ports:
       - 3306:3306
     environment:
@@ -52,6 +52,7 @@ services:
     volumes:
       - ./apps/db:/var/lib/mysql
       - ./conf/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./conf/creds.sql:/tmp/creds.sql
     networks:
       - testlink-network
 networks:
