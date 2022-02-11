@@ -39,8 +39,6 @@ services:
       MYSQL_USER: '${DB_USER}'
       MYSQL_PASSWORD: '${DB_PASS}'
       MYSQL_DATABASE: '${DB_NAME}'
-      TESTLINK_USERNAME: '${TESTLINK_USERNAME}'
-      TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
     volumes:
       - ./apps/db:/var/lib/mysql
       - ./conf/init.sql:/docker-entrypoint-initdb.d/init.sql

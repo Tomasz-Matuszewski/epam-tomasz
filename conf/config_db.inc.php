@@ -1,8 +1,8 @@
 <?php
 define('DB_TYPE', 'mysql');
-define('DB_USER', '${DB_USER}');
-define('DB_PASS', '${DB_PASS}');
-define('DB_HOST', '${DB_HOST}');
-define('DB_NAME', '${DB_NAME}');
+define('DB_USER', 'testlink');
+define('DB_PASS', 'testlink');
+define('DB_HOST', 'db');
+define('DB_NAME', 'testlink_db');
 define('DB_TABLE_PREFIX', '');
 ?>
