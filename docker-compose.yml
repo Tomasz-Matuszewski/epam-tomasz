@@ -18,10 +18,10 @@ services:
     links:
       - db
     environment:
-      TESTLINK_DB_USER: '${DB_USER}'
-      TESTLINK_DB_PASSWORD: '${DB_PASS}'
-      TESTLINK_DB_DATABASE: '${DB_NAME}'
-      TESTLINK_DB_HOST: '${DB_HOST}'
+      DB_USER: '${DB_USER}'
+      DB_PASS: '${DB_PASS}'
+      DB_NAME: '${DB_NAME}'
+      DB_HOST: '${DB_HOST}'
     volumes:
       - testlink:/var/www/html/testlink:rw
     networks:
