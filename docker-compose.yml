@@ -37,11 +37,6 @@ services:
     image: mysql:5.7
     restart: unless-stopped
     container_name: db
-    command:
-      - /bin/bash
-      - -c
-      - |
-          mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} ${DB_NAME} < ./tmp/creds.sql
     ports:
       - 3306:3306
     environment:
@@ -49,10 +44,10 @@ services:
       MYSQL_USER: '${DB_USER}'
       MYSQL_PASSWORD: '${DB_PASS}'
       MYSQL_DATABASE: '${DB_NAME}'
+      TESTLINK_PASS: '${TESTLINK_PASS}'
     volumes:
       - ./apps/db:/var/lib/mysql
       - ./conf/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./conf/creds.sql:/tmp/creds.sql
     networks:
       - testlink-network
 networks:
