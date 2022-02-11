@@ -1,7 +1,3 @@
-echo "** Creating DB and users"
-mysql -u root -p$MYSQL_ROOT_PASSWORD --execute \
-
-"
 CREATE TABLE /*prefix*/assignment_types (
   `id` int(10) unsigned NOT NULL auto_increment,
   `fk_table` varchar(30) default '',
@@ -1149,7 +1145,7 @@ INSERT INTO /*prefix*/role_rights (role_id,right_id) VALUES (9,50);
 #
 # TICKET 4342: Security problem with multiple Testlink installations on the same server 
 INSERT INTO /*prefix*/users (login,password,role_id,email,first,last,locale,active,cookie_string)
-			VALUES ('admin',MD5('$TESTLINK_PASSWORD'), 8,'', 'Testlink','Administrator', 'en_GB',1,CONCAT(MD5(RAND()),MD5('admin')));
+			VALUES ('admin',MD5('admin'), 8,'', 'Testlink','Administrator', 'en_GB',1,CONCAT(MD5(RAND()),MD5('admin')));
 
 
 # Assignment types
@@ -1162,5 +1158,3 @@ INSERT INTO /*prefix*/assignment_status (id,description) VALUES(2,'closed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(3,'completed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(4,'todo_urgent');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(5,'todo');
-"
-echo "** Finished creating DB and users"
