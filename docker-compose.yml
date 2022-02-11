@@ -41,7 +41,7 @@ services:
       - /bin/bash
       - -c
       - |
-          mysql -u ${MYSQL_USER} -p ${MYSQL_PASSWORD} -h ${MYSQL_ROOT_HOST} ${MYSQL_DATABASE} < ./conf/creds.sql
+          mysql -u ${MYSQL_USER} -p ${MYSQL_PASSWORD}  ${MYSQL_DATABASE} < ./conf/creds.sql
     ports:
       - 3306:3306
     environment:
