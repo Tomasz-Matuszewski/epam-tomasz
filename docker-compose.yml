@@ -43,7 +43,7 @@ services:
       TESTLINK_PASSWORD: '${TESTLINK_PASSWORD}'
     volumes:
       - ./apps/db:/var/lib/mysql
-      - ./testlink_create_tables.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./testlink_create_tables.sh:/docker-entrypoint-initdb.d/init.sh
     networks:
       - testlink-network
 networks:

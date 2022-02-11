@@ -1,46 +1,7 @@
-# TestLink Open Source Project - http://testlink.sourceforge.net/
-# This script is distributed under the GNU General Public License 2 or later.
-# ---------------------------------------------------------------------------------------
-# @filesource testlink_create_tables.sql
-#
-# SQL script - create all DB tables for MySQL
-# tables are in alphabetic order  
-#
-# ATTENTION: do not use a different naming convention, that one already in use.
-#
-# IMPORTANT NOTE:
-# each NEW TABLE added here NEED TO BE DEFINED in object.class.php getDBTables()
-#
-# IMPORTANT NOTE - DATETIME or TIMESTAMP
-# Extracted from MySQL Manual
-#
-# The TIMESTAMP column type provides a type that you can use to automatically 
-# mark INSERT or UPDATE operations with the current date and time. 
-# If you have multiple TIMESTAMP columns in a table, only the first one is updated automatically.
-#
-# Knowing this is clear that we can use in interchangable way DATETIME or TIMESTAMP
-#
-# Naming convention for column regarding date/time of creation or change
-#
-# Right or wrong from TL 1.7 we have used
-#
-# creation_ts
-# modification_ts
-#
-# Then no other naming convention has to be used as:
-# create_ts, modified_ts
-#
-# CRITIC:
-# Because this file will be processed during installation doing text replaces
-# to add TABLE PREFIX NAME, any NEW DDL CODE added must be respect present
-# convention regarding case and spaces between DDL keywords.
-# 
-# ---------------------------------------------------------------------------------------
-# @internal revisions
-#
-# ---------------------------------------------------------------------------------------
+echo "** Creating DB and users"
+mysql -u root -p$MYSQL_ROOT_PASSWORD --execute \
 
-
+"
 CREATE TABLE /*prefix*/assignment_types (
   `id` int(10) unsigned NOT NULL auto_increment,
   `fk_table` varchar(30) default '',
@@ -1188,7 +1149,7 @@ INSERT INTO /*prefix*/role_rights (role_id,right_id) VALUES (9,50);
 #
 # TICKET 4342: Security problem with multiple Testlink installations on the same server 
 INSERT INTO /*prefix*/users (login,password,role_id,email,first,last,locale,active,cookie_string)
-			VALUES ('admin',MD5('"$TESTLINK_PASSWORD"'), 8,'', 'Testlink','Administrator', 'en_GB',1,CONCAT(MD5(RAND()),MD5('admin')));
+			VALUES ('admin',MD5('$TESTLINK_PASSWORD'), 8,'', 'Testlink','Administrator', 'en_GB',1,CONCAT(MD5(RAND()),MD5('admin')));
 
 
 # Assignment types
@@ -1201,3 +1162,5 @@ INSERT INTO /*prefix*/assignment_status (id,description) VALUES(2,'closed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(3,'completed');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(4,'todo_urgent');
 INSERT INTO /*prefix*/assignment_status (id,description) VALUES(5,'todo');
+"
+echo "** Finished creating DB and users"
